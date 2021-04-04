@@ -1,4 +1,4 @@
-CREATE TABLE User (
+CREATE TABLE user (
     UserID INT NOT NULL AUTO_INCREMENT,
     Email VARCHAR(100) NOT NULL,
     Username VARCHAR(30) NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE User (
     UNIQUE (Email),
     UNIQUE (Username)
 );
-CREATE TABLE Admin (
+CREATE TABLE admin (
     AdminID INT NOT NULL AUTO_INCREMENT,
     FirstName VARCHAR(30) NOT NULL,
     Surname VARCHAR(30) NOT NULL,
@@ -18,14 +18,14 @@ CREATE TABLE Admin (
     UNIQUE (Email),
     UNIQUE (Username)
 );
-CREATE TABLE Product (
+CREATE TABLE product (
     ProductNo INT NOT NULL AUTO_INCREMENT,
     Barcode VARCHAR(100) NOT NULL,
     Name VARCHAR(100) NOT NULL,
     PRIMARY KEY (ProductNo),
     UNIQUE (Barcode)
 );
-CREATE TABLE Grocery (
+CREATE TABLE grocery (
     GroceryNo INT NOT NULL AUTO_INCREMENT,
     Barcode VARCHAR(100),
     Name VARCHAR(100) NOT NULL,
@@ -33,15 +33,16 @@ CREATE TABLE Grocery (
     UserID INT NOT NULL,
     PRIMARY KEY (GroceryNo)
 );
-CREATE TABLE Alert (
+CREATE TABLE alert (
     AlertNo INT NOT NULL AUTO_INCREMENT,
     UserID INT NOT NULL,
     GroceryNo INT NOT NULL,
     PRIMARY KEY (AlertNo)
 );
-CREATE TABLE Request (
+CREATE TABLE request (
     RequestNo INT NOT NULL AUTO_INCREMENT,
     ProductName VARCHAR(100) NOT NULL,
+    ProductBarcode VARCHAR(100) NOT NULL,
     UserID INT NOT NULL,
     PRIMARY KEY (RequestNo)
 );
