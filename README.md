@@ -2,31 +2,31 @@
 Our Food Tracking application for COMP208 consisting of an API, iPhone Application to interact with the API and a Web Application.
 
 ## Todo
-- [] Entities
-  - [] Grocery
+- [ ] Entities
+  - [ ] Grocery
     - [x] Create
     - [x] Read
-    - [] Update
-    - [] Delete
-  - [] Request
-    - [] Create
-  - [] User
-    - [] Create
-    - [] Read
-    - [] Update
-    - [] Delete
+    - [ ] Update
+    - [ ] Delete
+  - [ ] Request
+    - [ ] Create
+  - [ ] User
+    - [ ] Create
+    - [ ] Read
+    - [ ] Update
+    - [ ] Delete
     
-- [] Users
+- [ ] Users
   - [x] Create
   - [x] Read
-  - [] Update
-  - [] Delete
+  - [ ] Update
+  - [ ] Delete
   
-- [] Requests
-  - [] Create
+- [ ] Requests
+  - [ ] Create
   
-- [] Groceries
-  - [] Create
-  - [] Read
-  - [] Update
-  - [] Delete
+- [ ] Groceries
+  - [ ] Create
+  - [ ] Read
+  - [ ] Update
+  - [ ] Delete
