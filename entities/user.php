@@ -109,7 +109,16 @@ class user {
     Password field on user id.
 
     */
-    public function update($id, $newPassword, $confirmedPassword) {
+    public function update($id, $newPassword) {
+
+        // create statement and hashed password from param
+        $stmt = $this->conn->prepare("UPDATE user SET Password = :pwd WHERE UserID = :uid");
+        $hashedPwd = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        $stmt->bindValue(':pwd', $hashedPwd, PDO::PARAM_STR);
+        $stmt->bindValue(':uid', $id, PDO::PARAM_INT);
+
+        return $stmt->execute();
 
     }
 
@@ -121,6 +130,12 @@ class user {
 
     */
     public function delete($id) {
+
+        $stmt = $this->conn->prepare("DELETE FROM user WHERE UserID = :uid");
+
+        $stmt->bindValue(':uid', $id, PDO::PARAM_INT);
+
+        return $stmt->execute();
 
     }
 

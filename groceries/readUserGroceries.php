@@ -4,48 +4,51 @@ header("Content-Type: application/json; charset=UTF-8");
 
 include_once '../config/dbconfig.php';
 include_once '../entities/grocery.php';
+include_once '../entities/user.php';
 
 $db = new dbconfig();
 $conn = $db->getConnection();
 
-// get the user ID
-$userID = 0;
-
-if (isset($_GET["userID"])) {
-    $userID = $_GET["userID"];
-} else {
-    echo '{';
-    echo '"message:": Error! You need to specify a User ID as parameter userID in the GET request."';
-    echo '}';
-}
-
 $grocery = new grocery($conn);
+$user = new user($conn);
 
-$stmt = $grocery->readAll($userID);
-$count = $stmt->rowCount();
 
-if (count > 0) {
+// call read function from user, POSTing with uname and pwd if they're set
+if (isset($_POST['identifier']) && !empty($_POST['identifier']) && isset($_POST['password']) && !empty($_POST['password'])) {
 
-    // setting up the JSON response
-    $groceries = array();
-    $groceries["body"] = array();
-    $groceries["count"] = $count;
+    $return = $user->read($_POST['identifier'], $_POST['password']);
+    $userCount = count($return);
 
-    while ($row = $stmt->fetch()) {
+    // a user was returned
+    if ($userCount == 1) {
+        $userID = $return[0][1];
 
-        extract($row);
+        // we either get back a JSON object of groceries, or not
+        $groceries = $grocery->readAll($userID);
 
-        $currentGrocery = array(
-            "GroceryNo" => $GroceryNo,
-            "Barcode" => $Barcode,
-            "Name" => $Name,
-            "ExpiryDate" => $ExpiryDate,
-            "UserID" => $UserID
-        );
+        echo json_encode($groceries);
 
-        array_push($groceries["body"], $currentGrocery);
+    } else {
+
+        $jsonRes = new stdClass();
+
+        $jsonRes->status = "401";
+        $jsonRes->title = "Invalid Details";
+        $jsonRes->detail = "The username or email and password combination was incorrect.";
+
+        echo json_encode($jsonRes);
 
     }
+
+} else {
+
+    $jsonRes = new stdClass();
+
+    $jsonRes->status = "401";
+    $jsonRes->title = "No Details Supplied";
+    $jsonRes->detail = "The username or email and password combination was not provided, therefore, user is not authenticated.";
+
+    echo json_encode($jsonRes);
 
 }
 

@@ -30,11 +30,38 @@ if (!empty($email) && !empty($username) && !empty($password)) {
 
 // status of creating our product
 if ($status) {
-    echo '{';
-    echo '"message:": User was created."';
-    echo '}';
+
+    // create the json response object
+    $jsonRes = array();
+    $jsonRes['status'] = new stdClass();
+    $jsonRes['data'] = new stdClass();
+
+    // status in response
+    $jsonRes['status']->success = "true";
+    $jsonRes['status']->code = "201";
+
+    $jsonRes['data']->type = "User";
+    $jsonRes['data']->title = "User created.";
+    $jsonRes['data']->detail = "User created with no errors, proceed to login.";
+
+    echo json_encode($jsonRes);
+
+
 } else {
-    echo '{';
-    echo '"message:": Unable to create User."';
-    echo '}';
+    
+    // create the json response object
+    $jsonRes = array();
+    $jsonRes['status'] = new stdClass();
+    $jsonRes['data'] = new stdClass();
+
+    // status in response
+    $jsonRes['status']->success = "false";
+    $jsonRes['status']->code = "409";
+
+    $jsonRes['data']->type = "User";
+    $jsonRes['data']->title = "User not created.";
+    $jsonRes['data']->detail = "Due to an error, the user could not be created. Try again.";
+
+    echo json_encode($jsonRes);
+
 }

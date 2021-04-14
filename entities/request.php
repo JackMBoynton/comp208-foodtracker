@@ -8,7 +8,9 @@ class request {
     private $tbl = "request";
 
     // table columns
-
+    public $ProductNo;
+    public $ProductBarcode;
+    public $UserID;
 
     public function __construct($conn) {
         $this->conn = $conn;
@@ -21,14 +23,14 @@ class request {
     This route reads all the groceries for a specific user
 
     */
-    public function create($ProductName, $UserID) {
+    public function create($ProductName, $ProductBarcode, $UserID) {
 
         // Having to use prepare and binding here, so no SQL injection
-        $stmt = $this->conn->prepare("INSERT INTO grocery (Barcode, Name, ExpiryDate, UserID) VALUES (:barcode, :name, :ExpiryDate, :UserID)");
-        $stmt->bindValue(':barcode', $barcode, PDO::PARAM_STR);
-        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
-        $stmt->bindValue(':name', $expiryDate, PDO::PARAM_STR);
-        $stmt->bindValue(':name', $userID, PDO::PARAM_INT);
+        $stmt = $this->conn->prepare("INSERT INTO request (ProductName, ProductBarcode, UserID) VALUES (:name, :barcode, :uid)");
+        
+        $stmt->bindValue(':name', $ProductName, PDO::PARAM_STR);
+        $stmt->bindValue(':barcode', $ProductBarcode, PDO::PARAM_STR);
+        $stmt->bindValue(':uid', $UserID, PDO::PARAM_INT);
 
         return $stmt->execute();
 

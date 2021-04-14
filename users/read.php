@@ -29,8 +29,13 @@ $count = count($queryReturn);
 if ($count > 0) {
 
     $users = array();
+    $users['status'] = new stdClass();
     $users["body"] = array();
     $users["count"] = $count;
+
+    // status in response
+    $users['status']->success = "true";
+    $users['status']->code = "200";
 
     $userRow = array(
         "UserID" => $queryReturn[0][1],

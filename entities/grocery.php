@@ -31,11 +31,11 @@ class grocery {
     public function create($barcode, $name, $expiryDate, $userID) {
 
         // Having to use prepare and binding here, so no SQL injection
-        $stmt = $this->conn->prepare("INSERT INTO grocery (Barcode, Name, ExpiryDate, UserID) VALUES (:barcode, :name, :ExpiryDate, :UserID)");
+        $stmt = $this->conn->prepare("INSERT INTO grocery (Barcode, Name, ExpiryDate, UserID) VALUES (:barcode, :name, :expiryDate, :userID)");
         $stmt->bindValue(':barcode', $barcode, PDO::PARAM_STR);
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
-        $stmt->bindValue(':name', $expiryDate, PDO::PARAM_STR);
-        $stmt->bindValue(':name', $userID, PDO::PARAM_INT);
+        $stmt->bindValue(':expiryDate', $expiryDate, PDO::PARAM_STR);
+        $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 
         return $stmt->execute();
 
@@ -50,39 +50,85 @@ class grocery {
     */
     public function readAll($userID) {
 
-        // No preparing or binding needed, as no user input is present in SQL
-        $query = "SELECT * FROM " . $this->tbl . " WHERE UserID = " . $userID;
-        return $this->conn->exec($query);
+        // we need to grab the
+        $stmt = $this->conn->prepare("SELECT GroceryNo, Name, ExpiryDate FROM grocery WHERE UserID = :uid");
 
-    }
+        $stmt->bindValue(':uid', $userID, PDO::PARAM_INT);
 
-    /* GET http://comp208-foodtracker/groceries/read.php
+        // execute query
+        $stmt->execute();
 
-    $groceryNo = this is the grocery number for the grocery we have to get
+        // array to return
+        $groceries = array();
 
-    This route reads a specified grocery
+        $groceriesCount = $stmt->rowCount();
 
-    */
-    public function read($groceryNo) {
+        if ($groceriesCount > 0) {
+            
+            $groceries['body'] = array();
+            $groceries['count'] = $groceriesCount;
 
-        // No preparing or binding needed, as no user input is present in SQL
-        $query = "SELECT * FROM " . $this->tbl . " WHERE GroceryNo = " . $groceryNo;
-        return $this->conn->exec($query);
+            // while we have rows
+            while ($row = $stmt->fetch()) {
+
+                // extract the row
+                extract($row);
+
+                $currentGrocery = array(
+                    "GroceryNo" => $GroceryNo,
+                    "Name" => $Name,
+                    "ExpiryDate" => $ExpiryDate
+                );
+
+                array_push($groceries['body'], $currentGrocery);
+
+            }
+
+        } else {
+
+            $groceries['body'] = array();
+            $groceries['count'] = 0;
+
+        }
+
+        return $groceries;
 
     }
 
     /* POST http://comp208-foodtracker/groceries/update.php
 
-    $userID = this is the user's ID for the groceries we have to get
+    $groceryNo = this is the groceries ID for updating
 
     This route reads all the groceries for a specific user
 
     */
-    public function update() {
+    public function update($groceryNo, $name, $expiryDate) {
+
+        // create statement and hashed password from param
+        $stmt = $this->conn->prepare("UPDATE grocery SET Name = :name, ExpiryDate = :exp WHERE GroceryNo = :groceryNo");
+
+        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+        $stmt->bindValue(':exp', $expiryDate, PDO::PARAM_STR);
+        $stmt->bindValue(':groceryNo', $groceryNo, PDO::PARAM_INT);
+
+        return $stmt->execute();
 
     }
 
-    public function delete() {
+    /* POST http://comp208-foodtracker/groceries/update.php
+
+    $groceryNo = this is the groceries ID for deleting
+
+    This route reads all the groceries for a specific user
+
+    */
+    public function delete($groceryNo) {
+
+        $stmt = $this->conn->prepare("DELETE FROM grocery WHERE GroceryNo = :groceryNo");
+
+        $stmt->bindValue(':groceryNo', $groceryNo, PDO::PARAM_INT);
+
+        return $stmt->execute();
 
     }
 
