@@ -65,7 +65,7 @@ class grocery {
 
         if ($groceriesCount > 0) {
             
-            $groceries['body'] = array();
+            $groceries['groceries'] = array();
             $groceries['count'] = $groceriesCount;
 
             // while we have rows
@@ -80,13 +80,13 @@ class grocery {
                     "ExpiryDate" => $ExpiryDate
                 );
 
-                array_push($groceries['body'], $currentGrocery);
+                array_push($groceries['groceries'], $currentGrocery);
 
             }
 
         } else {
 
-            $groceries['body'] = array();
+            $groceries['groceries'] = array();
             $groceries['count'] = 0;
 
         }

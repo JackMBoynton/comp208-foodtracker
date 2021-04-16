@@ -32,60 +32,38 @@ if (isset($_POST['identifier']) && !empty($_POST['identifier']) && isset($_POST[
         // status of creating our product
         if ($status) {
             
-            // create the json response object
-            $jsonRes = array();
-            $jsonRes['status'] = new stdClass();
-            $jsonRes['data'] = new stdClass();
-
-            // status in response
-            $jsonRes['status']->success = "true";
-            $jsonRes['status']->code = "201";
-
-            $jsonRes['data']->type = "Grocery";
-            $jsonRes['data']->title = "Grocery created.";
-            $jsonRes['data']->detail = "Grocery created with no errors, now in your product store.";
-
-            echo json_encode($jsonRes);
+            $result = array(
+                "Result" => "Success: Grocery created"
+            );
+        
+            echo json_encode($result);
 
         } else {
             
-            // create the json response object
-            $jsonRes = array();
-            $jsonRes['status'] = new stdClass();
-            $jsonRes['data'] = new stdClass();
-
-            // status in response
-            $jsonRes['status']->success = "false";
-            $jsonRes['status']->code = "409";
-
-            $jsonRes['data']->type = "Grocery";
-            $jsonRes['data']->title = "Grocery not created.";
-            $jsonRes['data']->detail = "Due to an error, the grocery could not be created. Try again.";
-
-            echo json_encode($jsonRes);
+            $result = array(
+                "Result" => "Failed: API error"
+            );
+        
+            echo json_encode($result);
 
         }
 
     } else {
 
-        $jsonRes = new stdClass();
-
-        $jsonRes->status = "401";
-        $jsonRes->title = "Invalid Details";
-        $jsonRes->detail = "The username or email and password combination was incorrect.";
-
-        echo json_encode($jsonRes);
+        $result = array(
+            "Result" => "Failed: Authentication error"
+        );
+    
+        echo json_encode($result);
 
     }
 
 } else {
 
-    $jsonRes = new stdClass();
+    $result = array(
+        "Result" => "Failed: Authentication error"
+    );
 
-    $jsonRes->status = "401";
-    $jsonRes->title = "No Details Supplied";
-    $jsonRes->detail = "The username or email and password combination was not provided, therefore, user is not authenticated.";
-
-    echo json_encode($jsonRes);
+    echo json_encode($result);
 
 }
