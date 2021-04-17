@@ -31,13 +31,11 @@ if (isset($_POST['identifier']) && !empty($_POST['identifier']) && isset($_POST[
 
             } else {
 
-                $jsonRes = new stdClass();
-
-                $jsonRes->status = "401";
-                $jsonRes->title = "Confirm password was incorrect.";
-                $jsonRes->detail = "The passwords were not the same.";
-
-                echo json_encode($jsonRes);
+                $result = array(
+                    "Result" => "Failed: Password/confirm password not the same"
+                );
+            
+                echo json_encode($result);
                 
             }
         }
@@ -45,46 +43,38 @@ if (isset($_POST['identifier']) && !empty($_POST['identifier']) && isset($_POST[
         // status of creating our product
         if ($status) {
             
-            $jsonRes = new stdClass();
-
-            $jsonRes->status = "200";
-            $jsonRes->title = "User Updated";
-            $jsonRes->detail = "The password was updated successfully.";
-
-            echo json_encode($jsonRes);
+            $result = array(
+                "Result" => "Success: Password updated"
+            );
+        
+            echo json_encode($result);
 
         } else {
             
-            $jsonRes = new stdClass();
-
-            $jsonRes->status = "401";
-            $jsonRes->title = "User not updated";
-            $jsonRes->detail = "The password could not be updated successfully.";
-
-            echo json_encode($jsonRes);
+            $result = array(
+                "Result" => "Failed: Password not updated"
+            );
+        
+            echo json_encode($result);
 
         }
 
     } else {
 
-        $jsonRes = new stdClass();
-
-        $jsonRes->status = "401";
-        $jsonRes->title = "Invalid Details";
-        $jsonRes->detail = "The username or email and password combination was not supplied, this is needed as well as the new password.";
-
-        echo json_encode($jsonRes);
+        $result = array(
+            "Result" => "Failed: Data not supplied 1"
+        );
+    
+        echo json_encode($result);
 
     }
 
 } else {
 
-    $jsonRes = new stdClass();
+    $result = array(
+        "Result" => "Failed: Data not supplied 2"
+    );
 
-    $jsonRes->status = "401";
-    $jsonRes->title = "No Details Supplied";
-    $jsonRes->detail = "The username or email and password combination was not provided, therefore, user is not authenticated.";
-
-    echo json_encode($jsonRes);
+    echo json_encode($result);
 
 }

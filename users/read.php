@@ -27,29 +27,21 @@ $queryReturn = $user->read($identifier, $password);
 $count = count($queryReturn);
 
 if ($count > 0) {
-
-    $users = array();
-    $users['status'] = new stdClass();
-    $users["body"] = array();
-    $users["count"] = $count;
-
-    // status in response
-    $users['status']->success = "true";
-    $users['status']->code = "200";
-
-    $userRow = array(
-        "UserID" => $queryReturn[0][1],
+    
+    $result = array(
+        "Result" => "Success",
+        "UserID" => strval($queryReturn[0][1]), // Need the ID in String as well
         "Username" => $queryReturn[0][0]
     );
 
-    array_push($users["body"], $userRow);
-
-    echo json_encode($users);
+    echo json_encode($result);
 
 } else {
 
-    echo json_encode(
-        array("body" => array(), "count" => 0)
+    $result = array(
+        "Result" => "Failed: Authentication incorrect username/password"
     );
+
+    echo json_encode($result);
 
 }

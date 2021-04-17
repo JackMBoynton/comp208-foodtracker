@@ -30,46 +30,38 @@ if (isset($_POST['identifier']) && !empty($_POST['identifier']) && isset($_POST[
         // status of creating our product
         if ($status) {
 
-            $jsonRes = new stdClass();
-
-            $jsonRes->status = "200";
-            $jsonRes->title = "User deleted.";
-            $jsonRes->detail = "The user has been removed from the database.";
-
-            echo json_encode($jsonRes);
+            $result = array(
+                "Result" => "Success: User deleted"
+            );
+        
+            echo json_encode($result);
 
         } else {
             
-            $jsonRes = new stdClass();
-
-            $jsonRes->status = "409";
-            $jsonRes->title = "User not deleted.";
-            $jsonRes->detail = "The user has not been removed from the database due to an error.";
-
-            echo json_encode($jsonRes);
+            $result = array(
+                "Result" => "Failed: Database error"
+            );
+        
+            echo json_encode($result);
 
         }
 
     } else {
 
-        $jsonRes = new stdClass();
-
-        $jsonRes->status = "401";
-        $jsonRes->title = "Invalid Details";
-        $jsonRes->detail = "The username / email and password combination was incorrect.";
-
-        echo json_encode($jsonRes);
+        $result = array(
+            "Result" => "Failed: Authentication incorrect username/password"
+        );
+    
+        echo json_encode($result);
 
     }
 
 } else {
 
-    $jsonRes = new stdClass();
+    $result = array(
+        "Result" => "Failed: Authentication incorrect username/password"
+    );
 
-    $jsonRes->status = "401";
-    $jsonRes->title = "No Details Supplied";
-    $jsonRes->detail = "The username / email and password combination was not provided, therefore, user is not authenticated.";
-
-    echo json_encode($jsonRes);
+    echo json_encode($result);
 
 }

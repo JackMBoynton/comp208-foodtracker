@@ -38,46 +38,38 @@ if (isset($_POST['identifier']) && !empty($_POST['identifier']) && isset($_POST[
         // status of creating our product
         if ($status) {
             
-            $jsonRes = new stdClass();
-
-            $jsonRes->status = "200";
-            $jsonRes->title = "Request Created";
-            $jsonRes->detail = "The request has been submitted for admin approval.";
-
-            echo json_encode($jsonRes);
+            $result = array(
+                "Result" => "Success: Request submitted for approval"
+            );
+        
+            echo json_encode($result);
 
         } else {
             
-            $jsonRes = new stdClass();
-
-            $jsonRes->status = "401";
-            $jsonRes->title = "Request not submitted.";
-            $jsonRes->detail = "The request could not be submitted at this time, try again.";
-
-            echo json_encode($jsonRes);
+            $result = array(
+                "Result" => "Failed: Request submitting failed"
+            );
+        
+            echo json_encode($result);
 
         }
 
     } else {
 
-        $jsonRes = new stdClass();
-
-        $jsonRes->status = "401";
-        $jsonRes->title = "Invalid Details";
-        $jsonRes->detail = "The username or email and password combination was incorrect.";
-
-        echo json_encode($jsonRes);
+        $result = array(
+            "Result" => "Failed: Authentication error"
+        );
+    
+        echo json_encode($result);
 
     }
 
 } else {
 
-    $jsonRes = new stdClass();
+    $result = array(
+        "Result" => "Failed: Authentication error"
+    );
 
-    $jsonRes->status = "401";
-    $jsonRes->title = "No Details Supplied";
-    $jsonRes->detail = "The username or email and password combination was not provided, therefore, user is not authenticated.";
-
-    echo json_encode($jsonRes);
+    echo json_encode($result);
 
 }

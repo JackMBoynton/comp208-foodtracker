@@ -32,46 +32,38 @@ if (isset($_POST['identifier']) && !empty($_POST['identifier']) && isset($_POST[
 
 		if ($status) {
 
-			$jsonRes = new stdClass();
-
-			$jsonRes->status = "200";
-			$jsonRes->title = "Grocery deleted.";
-			$jsonRes->detail = "Grocery was successfully deleted in the product store.";
-
-			echo json_encode($jsonRes);
+			$result = array(
+                "Result" => "Success: Grocery deleted"
+            );
+        
+            echo json_encode($result);
 
 		} else {
 
-			$jsonRes = new stdClass();
-
-			$jsonRes->status = "401";
-			$jsonRes->title = "Grocery not deleted.";
-			$jsonRes->detail = "Grocery was not deleted due to an error on the API side.";
-
-			echo json_encode($jsonRes);
+			$result = array(
+                "Result" => "Failed: API error"
+            );
+        
+            echo json_encode($result);
 
 		}
 
     } else {
 
-        $jsonRes = new stdClass();
-
-        $jsonRes->status = "401";
-        $jsonRes->title = "Invalid Details";
-        $jsonRes->detail = "The username or email and password combination was incorrect.";
-
-        echo json_encode($jsonRes);
+        $result = array(
+            "Result" => "Failed: Authentication error"
+        );
+    
+        echo json_encode($result);
 
     }
 
 } else {
 
-    $jsonRes = new stdClass();
+    $result = array(
+        "Result" => "Failed: Authentication error"
+    );
 
-    $jsonRes->status = "401";
-    $jsonRes->title = "No Details Supplied";
-    $jsonRes->detail = "The username or email and password combination was not provided, therefore, user is not authenticated.";
-
-    echo json_encode($jsonRes);
+    echo json_encode($result);
 
 }

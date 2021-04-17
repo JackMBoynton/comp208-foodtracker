@@ -31,37 +31,23 @@ if (!empty($email) && !empty($username) && !empty($password)) {
 // status of creating our product
 if ($status) {
 
-    // create the json response object
-    $jsonRes = array();
-    $jsonRes['status'] = new stdClass();
-    $jsonRes['data'] = new stdClass();
+    $queryReturn = $user->read($username, $password); // To obtain the UID, there's potentially a better solution?
 
-    // status in response
-    $jsonRes['status']->success = "true";
-    $jsonRes['status']->code = "201";
+    $result = array(
+        "Result" => "Success: User created",
+        "UserID" => strval($queryReturn[0][1]),
+        "Username" => $queryReturn[0][0]
+    );
 
-    $jsonRes['data']->type = "User";
-    $jsonRes['data']->title = "User created.";
-    $jsonRes['data']->detail = "User created with no errors, proceed to login.";
-
-    echo json_encode($jsonRes);
+    echo json_encode($result);
 
 
 } else {
     
-    // create the json response object
-    $jsonRes = array();
-    $jsonRes['status'] = new stdClass();
-    $jsonRes['data'] = new stdClass();
+    $result = array(
+        "Result" => "Failed: User not created"
+    );
 
-    // status in response
-    $jsonRes['status']->success = "false";
-    $jsonRes['status']->code = "409";
-
-    $jsonRes['data']->type = "User";
-    $jsonRes['data']->title = "User not created.";
-    $jsonRes['data']->detail = "Due to an error, the user could not be created. Try again.";
-
-    echo json_encode($jsonRes);
+    echo json_encode($result);
 
 }

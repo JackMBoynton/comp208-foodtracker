@@ -30,25 +30,21 @@ if (isset($_POST['identifier']) && !empty($_POST['identifier']) && isset($_POST[
 
     } else {
 
-        $jsonRes = new stdClass();
-
-        $jsonRes->status = "401";
-        $jsonRes->title = "Invalid Details";
-        $jsonRes->detail = "The username or email and password combination was incorrect.";
-
-        echo json_encode($jsonRes);
+        $result = array(
+            "Result" => "Failed: Authentication error"
+        );
+    
+        echo json_encode($result);
 
     }
 
 } else {
 
-    $jsonRes = new stdClass();
+    $result = array(
+        "Result" => "Failed: Authentication error"
+    );
 
-    $jsonRes->status = "401";
-    $jsonRes->title = "No Details Supplied";
-    $jsonRes->detail = "The username or email and password combination was not provided, therefore, user is not authenticated.";
-
-    echo json_encode($jsonRes);
+    echo json_encode($result);
 
 }
 
