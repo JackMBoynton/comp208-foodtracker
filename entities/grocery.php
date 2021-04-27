@@ -132,4 +132,51 @@ class grocery {
 
     }
 
+    /* POST http://comp208-foodtracker/groceries/readFromBarcode.php
+
+    $barcode = this is the barcode to search for
+
+    ** This is an external API call function **
+
+    This route finds a product based on it's barcode and returns it's name.
+
+    */
+    public function barcodeSearch($barcode) {
+
+        // create a request
+
+        // first we need to create the link from the barcode to OF api
+        $url = "https://world.openfoodfacts.org/api/v0/product/" . $barcode . ".json";
+
+        // set the options
+        $options = array(
+            'http' => array(
+                'method' => 'GET',
+                'User-Agent' => "FoodTracker - iOS - Version 0.1",
+                'Host' => 'en.openfoodfacts.org'
+            )
+        );
+
+        // create context
+        $context = stream_context_create($options);
+
+        // open the file via HTTP headers above from options
+        $page = file_get_contents($url, false, $context);
+
+        // this is an stdClass Object
+        $page = json_decode($page);
+
+        $productName = '';
+
+        // from here we have to use arrows to find what we want
+        if (isset($page->product->product_name)) {
+            $productName = $page->product->product_name;
+        } else {
+            $productName = 'Product does not exist';
+        }
+
+        return $productName;
+
+    }
+
 }

@@ -19,33 +19,61 @@ if (isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['username'
     $email = $_POST["email"];
     $username = $_POST["username"];
     $password = $_POST["password"];
-}
 
-$status = FALSE;
+    $status = FALSE;
+    $exists = FALSE;
 
-// run our insert query
-if (!empty($email) && !empty($username) && !empty($password)) {
-    $status = $user->create($email, $username, $password);
-}
+    // run our insert query
+    if (!empty($email) && !empty($username) && !empty($password)) {
+        // the statement to see if the user already exists
+        $userStmt = $user->read($email, $password);
 
-// status of creating our product
-if ($status) {
+        // if user count of 1 is returned, set $status to false
+        if (count($userStmt) == 1) {
 
-    $queryReturn = $user->read($username, $password); // To obtain the UID, there's potentially a better solution?
+            $status = FALSE;
+            $exists = TRUE;
 
-    $result = array(
-        "Result" => "Success: User created",
-        "UserID" => strval($queryReturn[0][1]),
-        "Username" => $queryReturn[0][0]
-    );
+        } else {
+
+            $status = $user->create($email, $username, $password);
+
+        }
+
+    }
+
+    // check user was created successfully
+    if ($status) {
+
+        $queryReturn = $user->read($username, $password); // To obtain the UID, there's potentially a better solution?
+
+        $result = array(
+            "Result" => "Success: User created",
+            "UserID" => strval($queryReturn[0][1]),
+            "Username" => $queryReturn[0][0]
+        );
+
+
+    } else if (!$status && $exists) {
+
+        $result = array(
+            "Result" => "Failed: User not created. Already Exists!"
+        );
+
+    } else if (!$status) {
+        
+        $result = array(
+            "Result" => "Failed: User not created"
+        );
+
+    } 
 
     echo json_encode($result);
 
-
 } else {
-    
+
     $result = array(
-        "Result" => "Failed: User not created"
+        "Result" => "Failed: No email, username or password supplied."
     );
 
     echo json_encode($result);
