@@ -25,8 +25,12 @@ $grocery = new grocery($conn);
 if (isset($_POST['barcode']) && !empty($_POST['barcode'])) {
 
     $return = $grocery->barcodeSearch($_POST['barcode']);
+
+    $result = array(
+        "Result" => $return
+    );
     
-    echo json_encode($return);
+    echo json_encode($result);
 
 } else {
 
