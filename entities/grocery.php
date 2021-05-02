@@ -179,4 +179,103 @@ class grocery {
 
     }
 
+    /* POST http://comp208-foodtracker/groceries/getExpiringGroceries.php
+
+    $userID = this is the id of the user logged in that we are finding the groceries for
+
+    This route finds products expiring based on the current user's storage.
+
+    */
+    public function getExpiringGroceries($userID) {
+
+        // we need to grab the
+        $stmt = $this->conn->prepare("SELECT * FROM grocery WHERE ExpiryDate < NOW() + INTERVAL 3 DAY AND UserID = :uid");
+
+        $stmt->bindValue(':uid', $userID, PDO::PARAM_INT);
+
+        // execute query
+        $stmt->execute();
+
+        // array to return
+        $expiringGroceries = array();
+
+        $groceriesCount = $stmt->rowCount();
+
+        if ($groceriesCount > 0) {
+            
+            $expiringGroceries['groceries'] = array();
+            $expiringGroceries['count'] = $groceriesCount;
+
+            // while we have rows
+            while ($row = $stmt->fetch()) {
+
+                // extract the row
+                extract($row);
+
+                $currentGrocery = array(
+                    "Name" => $Name
+                );
+
+                array_push($expiringGroceries['groceries'], $currentGrocery);
+
+            }
+
+        } else {
+
+            $expiringGroceries['groceries'] = array();
+            $expiringGroceries['count'] = 0;
+
+        }
+
+        return $expiringGroceries;
+
+    }
+
+    public function getRecipes($ingredientsToInclude) {
+
+        $url = htmlspecialchars_decode("https://api.spoonacular.com/recipes/findByIngredients?ingredients=" . urlencode($ingredientsToInclude) . "&number=20&limitLicense=false&ranking=1&ignorePantry=false&apiKey=714c4a6fea1b4bd5a04ed47eb457f951");
+
+        // open the file via HTTP headers above from options
+        $response = file_get_contents($url);
+
+        // this is an stdClass Object
+        $jsonResponse = json_decode($response);
+
+        $recipes = array();
+        $recipesCount = count($jsonResponse);
+
+        if ($recipesCount > 0) {
+
+            $recipes['recipes'] = array();
+            $recipes['count'] = $recipesCount;
+
+            foreach ($jsonResponse as $recipe) {
+                // get the name and ID, we need the name for the table cell text, but we need both for crafting an id
+                $recipeID = $recipe->id;
+                $recipeName = $recipe->title;
+
+                $baseURL = "https://spoonacular.com/recipes/";
+                $recipeNameForURL = str_replace(' ', '-', trim($recipeName));
+                $recipeIDForURL = '-' . $recipeID;
+                $recipeURL = htmlspecialchars_decode($baseURL . urlencode($recipeNameForURL) . urlencode($recipeIDForURL));
+
+                $currentRecipe = array(
+                    'Name' => $recipeName,
+                    'URL' => $recipeURL
+                );
+
+                array_push($recipes['recipes'], $currentRecipe);
+            }
+
+        } else {
+
+            $recipes['recipes'] = array();
+            $recipes['count'] = 0;
+
+        }
+
+        return $recipes;
+
+    }
+
 }
